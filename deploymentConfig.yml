@@ -1,0 +1,25 @@
+#
+# This variables needs to be set for every IOC deployment
+# They will added to/substituted in st.cmd
+#############
+
+ENGINEER: "Oksana x7028"
+LOCATION: "11ID Hutch B"
+
+# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
+EPICS_CA_ADDR_LIST: "10.11.0.255"
+
+##PREFIX: "XF:11IDB-ES{Det:Eig1M}"
+PREFIX: "13SIM1"
+DETECTOR_IP: "10.11.1.3"
+ioc_name: yourIOCName
+
+# Deploytment_dir is The root of epics binaries tree 
+deployment_dir: /opt/epicsTest
+
+##IOC_TYPE: ADEiger
+IOC_TYPE: ADSimDetector
+
+##NAME: SimTest
+USER: softioc
+PORT: 6009

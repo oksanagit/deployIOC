@@ -1,0 +1,193 @@
+---
+
+- name: Deploy eiger IOC on a target host
+  hosts: all
+  become: true
+  vars:
+      root_ioc_dir: /epics/iocs
+  tasks:    
+      - name: include local deployment vars
+        include_vars: deploymentConfig.yml
+
+      - name: make sure /epics/iocs exists
+        file:
+            path: {root_ioc_dir}
+            state: directory   
+            owner: softioc
+            group: controls
+            mode: '0775'
+      - name: create dir ioc_name if it does not exists  
+        file:
+            path: "{{root_ioc_dir}}/{{ioc_name}}"
+            state: directory
+            group: controls
+            mode: '0775'
+      - name: create atosave folder  
+        file:
+            path: "{{root_ioc_dir}}/{{ioc_name}}/autosave"
+            state: directory
+            owner: softioc
+            group: controls
+            mode: '0777'      
+      
+      - name: create config file if Debian
+        blockinfile:
+                path: "{{root_ioc_dir}}/{{ioc_name}}/config"
+                create: yes
+                owner: softioc
+                group: controls
+                mode: u=rw,g=rw,o=r
+                block: |
+                  NAME={{ ioc_name }}
+                  USER={{USER}}
+                  PORT={{PORT}}
+                  HOST={{ inventory_hostname}}
+        when: ansible_os_family == 'Debian'         
+     
+      # - name: copy config from deployment machine to the target "{root_ioc_dir}/{ioc_name}""
+      #   copy:
+      #       src: config
+      #       dest: "{{root_ioc_dir}}/{{ioc_name}}/config"
+      #       owner: softioc
+      #       group: controls
+      #       mode: u=rw,g=rw,o=r      
+     
+      
+      
+    ############################################################
+    #
+    # This part of the script is specific to The detector "Type"
+    #        
+    #############################################################
+
+      ############
+      #
+      # ADEiger
+      #
+      ############
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: copy eiger st.cmd to ioc_name
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/st.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: softioc
+            group: controls
+            mode: u=rwx,g=rwx,o=rx 
+        when: IOC_TYPE == 'ADEiger'      
+
+      - name: enter correct path to ADEiger executable
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '#!../..'
+          replace: "#!{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC"
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: Enter EIGERIP    
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+          after: 'epicsEnvSet\(\"EIGERIP\", \"'
+          replace: "{{ DETECTOR_IP }}"
+        when: IOC_TYPE == 'ADEiger' 
+
+      ############
+      # 
+      # ADSimDetector
+      #
+      ############
+
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/iocBoot/iocSimDetector/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADSimDetector' 
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/iocBoot/iocSimDetector/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADSimDetector' 
+
+      - name: copy ADSimDetector st_base.cmd to {{ioc_name}}
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/iocBoot/iocSimDetector/st_base.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: softioc
+            group: controls
+            mode: u=rwx,g=rwx,o=rx   
+        when: IOC_TYPE == 'ADSimDetector' 
+
+      - name: enter correct path to ADSimDetector executable
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '#!../..'
+          replace: "#!{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC"
+        when: IOC_TYPE == 'ADSimDetector' 
+
+      - name: add < envPaths 
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: < envPaths
+
+      - name: add path to executable
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: "#!{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/bin/linux-x86_64/simDetectorApp"
+
+
+    ###########################################################
+    #
+    # End of detector specific section
+    #
+    ############################################################
+      
+      - name: add NSLS2 deployment specific information to st.cmd
+        blockinfile:
+            path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            insertafter: "< envPaths"
+            block: |
+              epicsEnvSet("ENGINEER", "{{ ENGINEER }}")
+              epicsEnvSet("LOCATION", "{{ LOCATION }}")
+              epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
+              epicsEnvSet("EPICS_CA_ADDR_LIST", "{{ EPICS_CA_ADDR_LIST }}")
+              
+      - name: set correct PREFIX
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          # after: 'epicsEnvSet\(\"PREFIX\", \"'
+          # regexp: '[0-9A-Za-z]*:'
+          # replace: "{{PREFIX}}"
+          # regexp: 'epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
+          regexp: 'epicsEnvSet("PREFIX", "[0-9A-Za-z]*:")'
+          replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}:")'
