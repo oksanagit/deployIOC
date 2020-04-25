@@ -1,0 +1,50 @@
+##########################
+#
+# ADEiger is the role now
+#
+##########################     
+
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: copy eiger st.cmd to ioc_name
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC/iocBoot/iocEiger/st.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: softioc
+            group: controls
+            mode: u=rwx,g=rwx,o=rx 
+        when: IOC_TYPE == 'ADEiger'      
+
+      - name: enter correct path to ADEiger executable
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '#!../..'
+          replace: "#!{{ deployment_dir }}/support/areaDetector/ADEiger/iocs/eigerIOC"
+        when: IOC_TYPE == 'ADEiger' 
+
+      - name: Enter EIGERIP    
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+          after: 'epicsEnvSet\(\"EIGERIP\", \"'
+          replace: "{{ DETECTOR_IP }}"
+        when: IOC_TYPE == 'ADEiger' 
