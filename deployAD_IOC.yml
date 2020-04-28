@@ -70,6 +70,11 @@
       - include_role: 
           name: ADSimDetector
         when: IOC_TYPE == 'ADSimDetector'  
+
+      # ADSimDetector has been moved to roles
+      - include_role: 
+          name: ADProsilica
+        when: IOC_TYPE == 'ADProsilica'    
       
     ###########################################################
     #
@@ -94,5 +99,5 @@
           # regexp: '[0-9A-Za-z]*:'
           # replace: "{{PREFIX}}"
           # regexp: 'epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
-          regexp: 'epicsEnvSet("PREFIX", "[0-9A-Za-z]*:")'
-          replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}:")'
+          regexp: '^epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
+          replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}")'

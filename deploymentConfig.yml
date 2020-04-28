@@ -4,21 +4,24 @@
 #############
 
 ENGINEER: "Oksana x7028"
-LOCATION: "11ID Hutch B"
+LOCATION: "XX ID Hutch X"
 
 # epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
-EPICS_CA_ADDR_LIST: "10.11.0.255"
+EPICS_CA_ADDR_LIST: "10.5.0.255"
 
 ##PREFIX: "XF:11IDB-ES{Det:Eig1M}"
-PREFIX: "13SIM1"
-DETECTOR_IP: "10.11.1.3"
+# PREFIX: "13SIM1"
+PREFIX: "XF:05ID1-ES{Test-Cam:1}"
+#DETECTOR_IP: "10.11.1.3"
+DETECTOR_IP: "10.5.1.40"
 ioc_name: yourIOCName
 
 # Deploytment_dir is The root of epics binaries tree 
 deployment_dir: /opt/epicsTest
 
 ##IOC_TYPE: ADEiger
-IOC_TYPE: ADSimDetector
+#IOC_TYPE: ADSimDetector
+IOC_TYPE: ADProsilica
 
 ##NAME: SimTest
 USER: softioc

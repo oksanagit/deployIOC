@@ -1,0 +1,64 @@
+########################################
+# 
+# ADProsilica is a role now
+#
+########################################
+
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+#        when: IOC_TYPE == 'ADProsilica' 
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+#        when: IOC_TYPE == 'ADProsilica' 
+
+      - name: copy ADProsilica st.cmd to {{ioc_name}}
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/st.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: softioc
+            group: controls
+            mode: u=rwx,g=rwx,o=rx   
+#        when: IOC_TYPE == 'ADProsilica' 
+
+      - name: enter correct path to ADProsilica executable
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '#!../..'
+          replace: "#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC"
+#        when: IOC_TYPE == 'ADProsilica' 
+
+      - name: add path to executable
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: "#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp"
+
+      - name: add < envPaths 
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertafter: "#!{{ deployment_dir }}"
+          line: < envPaths
+
+      - name: Enter IP    
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '^prosilicaConfig\(\"\$\(PORT\)\", [0-9]*,'
+#          after: 'epicsEnvSet\(\"EIGERIP\", \"'
+#          after: 'prosilicaConfig\(\"\$\(PORT\)\",'
+          replace: 'prosilicaConfig("$(PORT)", {{ DETECTOR_IP }}'
+
+
