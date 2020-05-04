@@ -1,6 +1,6 @@
 ---
 
-- name: Deploy eiger IOC on a target host
+- name: Deploy IOC on a target host
   hosts: all
   become: true
   vars:
@@ -22,35 +22,7 @@
             state: directory
             group: controls
             mode: '0775'
-      - name: create atosave folder  
-        file:
-            path: "{{root_ioc_dir}}/{{ioc_name}}/autosave"
-            state: directory
-            owner: softioc
-            group: controls
-            mode: '0777'      
-      
-      - name: create config file if Debian
-        blockinfile:
-                path: "{{root_ioc_dir}}/{{ioc_name}}/config"
-                create: yes
-                owner: softioc
-                group: controls
-                mode: u=rw,g=rw,o=r
-                block: |
-                  NAME={{ ioc_name }}
-                  USER={{USER}}
-                  PORT={{PORT}}
-                  HOST={{ inventory_hostname}}
-        when: ansible_os_family == 'Debian'         
-     
-      # - name: copy config from deployment machine to the target "{root_ioc_dir}/{ioc_name}""
-      #   copy:
-      #       src: config
-      #       dest: "{{root_ioc_dir}}/{{ioc_name}}/config"
-      #       owner: softioc
-      #       group: controls
-      #       mode: u=rw,g=rw,o=r      
+
      
       
       
@@ -101,3 +73,25 @@
           # regexp: 'epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
           regexp: '^epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
           replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}")'
+
+      - name: create atosave folder  
+        file:
+            path: "{{root_ioc_dir}}/{{ioc_name}}/autosave"
+            state: directory
+            owner: softioc
+            group: controls
+            mode: '0777'      
+      
+      - name: create config file if Debian
+        blockinfile:
+                path: "{{root_ioc_dir}}/{{ioc_name}}/config"
+                create: yes
+                owner: softioc
+                group: controls
+                mode: u=rw,g=rw,o=r
+                block: |
+                  NAME={{ ioc_name }}
+                  USER={{USER}}
+                  PORT={{PORT}}
+                  HOST={{ inventory_hostname}}
+        when: ansible_os_family == 'Debian'             

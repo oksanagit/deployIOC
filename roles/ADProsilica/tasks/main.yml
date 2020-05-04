@@ -4,6 +4,10 @@
 #
 ########################################
 
+      # This check is added on Jakub Wlodek request. To be evaluated if still needed
+      - name: check if binary exists
+        shell: 'ls "{{ deployment_dir }}"/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp'
+
       - name: create envPaths soft link
         file:
             src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/envPaths"
@@ -32,6 +36,7 @@
             owner: softioc
             group: controls
             mode: u=rwx,g=rwx,o=rx   
+
 #        when: IOC_TYPE == 'ADProsilica' 
 
       - name: enter correct path to ADProsilica executable
