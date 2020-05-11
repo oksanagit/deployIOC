@@ -46,7 +46,11 @@
       # ADSimDetector has been moved to roles
       - include_role: 
           name: ADProsilica
-        when: IOC_TYPE == 'ADProsilica'    
+        when: IOC_TYPE == 'ADProsilica' 
+
+      - include_role:
+          name: ADPointGrey
+        when: IOC_TYPE == 'ADPointGrey'       
       
     ###########################################################
     #

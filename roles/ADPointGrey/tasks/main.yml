@@ -1,0 +1,73 @@
+########################################
+# 
+# ADPointGrey role 
+#
+########################################
+
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC/iocBoot/iocPointGrey/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC/iocBoot/iocPointGrey/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            state: link 
+
+      - name: copy ADPointGrey st.cmd to {{ioc_name}}
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC/iocBoot/iocPointGrey/st.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: softioc
+            group: controls
+            mode: u=rwx,g=rwx,o=rx    
+
+      - name: enter correct path to ADPointGrey executable
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '#!../..'
+          replace: "#!{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC"
+
+      - name: add path to executable
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: "#!{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC/bin/linux-x86_64/pointGreyApp"
+      
+      # PointGrey st.cmd has << envPaths already
+      # - name: add < envPaths 
+      #   lineinfile:
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+      #     insertafter: "#!{{ deployment_dir }}"
+      #     line: < envPaths
+
+      - name: Enter SN/ID; some detectors are identified by ID, rather then by IP    
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: '^epicsEnvSet\(\"CAMERA_ID\", \"[0-9]*'
+          replace: 'epicsEnvSet("CAMERA_ID", "{{ CAMERA_ID }}'
+
+      - name: copy pointGrey.substitutions
+        copy:
+            src: "{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC/iocBoot/iocPointGrey/pointGrey.substitutions"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/pointGrey.substitutions"
+      - name: substitute "13PG1:" in pointGrey.substitutions for {{PREFIX}}
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/pointGrey.substitutions"
+          regexp: '13PG1:'
+          replace: '"{{ PREFIX }}"'
+      - name: create exportLibPath file, need to indicate for ADPintGrey via AD_LIBRARY_PATH where run time libraies are located.    
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/exportLibPath"
+          line: "export LD_LIBRARY_PATH={{ deployment_dir }}/support/areaDetector/ADPointGrey/lib/linux-x86_64"
+          create: yes
