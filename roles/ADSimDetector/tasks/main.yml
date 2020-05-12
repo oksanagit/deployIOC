@@ -4,6 +4,15 @@
 #
 ########################################
 
+#     Check it envPath exists and is symbolyc link
+      - stat:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+        register: st
+  
+      - fail:
+          msg: "envPaths exists and is a link"
+        when: generateEnvPaths == "YES" and st.stat.islnk is defined and st.stat.islnk==True
+
       - name: create envPaths soft link
         file:
             src: "{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/iocBoot/iocSimDetector/envPaths"
@@ -12,7 +21,33 @@
             group: controls
             mode: u=r,g=r,o=r
             state: link
-#        when: IOC_TYPE == 'ADSimDetector' 
+        when: generateEnvPaths == "NO"
+
+      - name: create envPaths for binary deployment in a different folder than iot was compiled in
+        blockinfile:
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            create: yes
+            owner: softioc
+            group: controls
+            mode: u=r,g=r,o=r
+            block: |
+              epicsEnvSet("IOC","iocSimDetector")
+              epicsEnvSet("TOP","{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC")
+              epicsEnvSet("ADPROSILICA","{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/../..")
+              epicsEnvSet("SUPPORT","{{ deployment_dir }}/support")
+              epicsEnvSet("ASYN","{{ deployment_dir }}/support/asyn")
+              epicsEnvSet("AREA_DETECTOR","{{ deployment_dir }}/support/areaDetector")
+              epicsEnvSet("ADSUPPORT","{{ deployment_dir }}/support/areaDetector/ADSupport")
+              epicsEnvSet("ADCORE","{{ deployment_dir }}/support/areaDetector/ADCore")
+              epicsEnvSet("AUTOSAVE","{{ deployment_dir }}/support/autosave")
+              epicsEnvSet("BUSY","{{ deployment_dir }}/support/busy")
+              epicsEnvSet("CALC","{{ deployment_dir }}/support/calc")
+              epicsEnvSet("SNCSEQ","{{ deployment_dir }}/support/seq")
+              epicsEnvSet("SSCAN","{{ deployment_dir }}/support/sscan")
+              epicsEnvSet("DEVIOCSTATS","{{ deployment_dir }}/support/iocStats")
+              epicsEnvSet("EPICS_BASE","{{ deployment_dir }}/epics-base")
+        when: generateEnvPaths == "YES"      
+ 
 
       - name: create auto_settings.req soft link
         file:
