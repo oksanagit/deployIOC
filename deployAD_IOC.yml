@@ -5,6 +5,7 @@
   become: true
   vars:
       root_ioc_dir: /epics/iocs
+      generateEnvPaths: "NO"
   tasks:    
       - name: include local deployment vars
         include_vars: deploymentConfig.yml
@@ -20,6 +21,7 @@
         file:
             path: "{{root_ioc_dir}}/{{ioc_name}}"
             state: directory
+            owner: softioc
             group: controls
             mode: '0775'
 
@@ -99,3 +101,22 @@
                   PORT={{PORT}}
                   HOST={{ inventory_hostname}}
         when: ansible_os_family == 'Debian'             
+
+# create procServe script if CentOS; It is detector spesific
+# How oftern it will be deployed on CentOS? 
+# example: 
+# procServ --logstamp -n "iocPilatus" -i ^D -L /home/det/epics/logs/epics_ioc.log 20001 /home/det/epics/areaDetector/ADPilatus/iocs/pilatusIOC/bin/linux-x86_64/pilatusDetectorApp st.cmd
+                  
+ 
+
+      - name: create procServe script if CentOS; 
+        blockinfile:
+              path: "{{root_ioc_dir}}/{{ioc_name}}/startEpicsIOC"
+              create: yes
+              owner: softioc
+              group: controls
+              mode: u=rwx,g=rwx,o=r
+              block: |
+                  procServ --logstamp -n "{{ioc_name}}" -i ^D -L {{root_ioc_dir}}/{{ioc_name}}/logs/epics_ioc.log {{PORT}} ./st.cmd
+                  telnet localhost {{PORT}}
+        when: ansible_os_family == 'RedHat'        
