@@ -96,7 +96,7 @@
       - name: Enter IP    
         replace:
           path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          regexp: '^prosilicaConfig\(\"\$\(PORT\)\", [0-9]*,'
+          regexp: '^prosilicaConfig\(\"\$\(PORT\)\", [0-9]*'
 #          after: 'epicsEnvSet\(\"EIGERIP\", \"'
 #          after: 'prosilicaConfig\(\"\$\(PORT\)\",'
           replace: 'prosilicaConfig("$(PORT)", {{ DETECTOR_IP }}'
