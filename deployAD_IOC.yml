@@ -12,7 +12,7 @@
 
       - name: make sure /epics/iocs exists
         file:
-            path: {root_ioc_dir}
+            path: "{{root_ioc_dir}}"
             state: directory   
             owner: softioc
             group: controls
