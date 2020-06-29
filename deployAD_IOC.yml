@@ -1,14 +1,16 @@
----
+##---
 
-- name: Deploy IOC on a target host
-  hosts: all
-  become: true
-  vars:
-      root_ioc_dir: /epics/iocs
-      generateEnvPaths: "NO"
-  tasks:    
-      - name: include local deployment vars
-        include_vars: deploymentConfig.yml
+# - name: Deploy IOC on a target host
+#   hosts: all
+#   become: true
+  # vars:
+  #     root_ioc_dir: /epics/iocs
+  #     generateEnvPaths: "NO"
+#  tasks:    
+      # - name: include local deployment vars
+      #   include_vars: deploymentConfig.yml
+      - debug: var=IOC_TYPE
+      
 
       - name: make sure /epics/iocs exists
         file:
