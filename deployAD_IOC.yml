@@ -65,7 +65,8 @@
       - name: add NSLS2 deployment specific information to st.cmd
         blockinfile:
             path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-            insertafter: "< envPaths"
+#            insertafter: "^#!/.*$"
+            insertafter: "^< envPaths$"
             block: |
               epicsEnvSet("ENGINEER", "{{ ENGINEER }}")
               epicsEnvSet("LOCATION", "{{ LOCATION }}")

@@ -1,0 +1,6 @@
+root_ioc_dir: /epics/iocs
+# deployment_dir ponts to the root of the deployed binaries
+# example /opt/epicsTest/support/areaDetector/ADProsilica.....
+deployment_dir: /opt/epicsTest  
+generateEnvPaths: "NO"
+USER: softioc

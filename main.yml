@@ -5,14 +5,14 @@
   tasks:
     - include_tasks:  deployAD_IOC.yml
       vars:
-        ioc_name: "{{ item }}"
-        IOC_TYPE: "{{ _IOCs[item].IOC_TYPE }}"
-        PREFIX: "{{ _IOCs[item].PREFIX }}"
-        PORT: "{{ _IOCs[item].PORT }}"
-        ENGINEER: "{{ _IOCs[item].ENGINEER }}"
-        LOCATION: "{{ _IOCs[item].LOCATION }}"
-        DETECTOR_IP: "{{ _IOCs[item].DETECTOR_IP }}"
-        CAMERA_ID: "{{ _IOCs[item].CAMERA_ID }}"
+        ioc_name: "{{ item.ioc_name }}"
+        IOC_TYPE: "{{ item.IOC_TYPE }}"
+        PREFIX: "{{ item.PREFIX }}"
+        PORT: "{{ item.PORT }}"
+        ENGINEER: "{{ item.ENGINEER }}"
+        LOCATION: "{{ item.LOCATION }}"
+        DETECTOR_IP: "{{ item.DETECTOR_IP }}"
+        CAMERA_ID: "{{ item.CAMERA_ID }}"
       with_items: 
         - "{{ ioc_names }}"
     

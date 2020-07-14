@@ -4,11 +4,14 @@
 #
 ########################################
 
-      # This check is added on Jakub Wlodek request. To be evaluated if still needed
+      # Check if binaries exists, not sure if needed script will fail if binaries are not accesible. 
+    
       - name: check if binary exists
         shell: 'ls "{{ deployment_dir }}"/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp'
 
-      # Check it envPath exists and is symbolyc link
+      # Check it envPath exists and is symbolyc link, if yes, don't overwrite, if no generate one. 
+      # If EPICS areaDetector support is not built on the target server, but delivered via binaries build elsewhere, 
+      # envpaths needs to be generated
       - stat:
           path: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
         register: st
@@ -27,7 +30,7 @@
             state: link
         when: generateEnvPaths == "NO"
 
-      - name: create envPaths for binary deployment in a different folder than iot was compiled in
+      - name: create envPaths for binary deployment in a different folder than it was compiled in
         blockinfile:
             dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
             create: yes
@@ -61,7 +64,6 @@
             group: controls
             mode: u=r,g=r,o=r
             state: link
-#        when: IOC_TYPE == 'ADProsilica' 
 
       - name: copy ADProsilica st.cmd to {{ioc_name}}
         copy:
@@ -71,32 +73,43 @@
             owner: softioc
             group: controls
             mode: u=rwx,g=rwx,o=rx   
+            force: no
 
-#        when: IOC_TYPE == 'ADProsilica' 
+      # - name: enter correct path to ADProsilica executable
+      #   replace:
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+      #     regexp: '#!../..'
+      #     replace: "#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC"
 
-      - name: enter correct path to ADProsilica executable
-        replace:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          regexp: '#!../..'
-          replace: "#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC"
-#        when: IOC_TYPE == 'ADProsilica' 
-
+      # st.cmd inADProsilica needs "hashbang and < envPath" be added, just like ADSimDetector, 7/13/2020 this does not work
       - name: add path to executable
         lineinfile:
           path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          state: present
           insertbefore: BOF
-          line: "#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp"
+ #         regexp: BOF
+          line: '#!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp'
 
       - name: add < envPaths 
         lineinfile:
           path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          insertafter: "#!{{ deployment_dir }}"
+          insertafter: "^#!/.*$"
           line: < envPaths
+
+      # - name: add path to executable and include envPaths
+      #   blockinfile: 
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+      #     state: present
+      #     insertbefore: BOF
+      #     marker: "# {mark} ADProsilica"
+      #     block: |
+      #       #!{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp
+      #       < envPaths
 
       - name: Enter IP    
         replace:
           path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          regexp: '^prosilicaConfig\(\"\$\(PORT\)\", [0-9]*'
+          regexp: '^prosilicaConfig\(\"\$\(PORT\)\", [0-9.]*'
 #          after: 'epicsEnvSet\(\"EIGERIP\", \"'
 #          after: 'prosilicaConfig\(\"\$\(PORT\)\",'
           replace: 'prosilicaConfig("$(PORT)", {{ DETECTOR_IP }}'

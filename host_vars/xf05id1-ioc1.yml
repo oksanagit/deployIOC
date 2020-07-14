@@ -1,10 +1,4 @@
-#
-# This variables will used to customize IOC's deployment. 
-# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO") is set by the script
-#
-####################################################################
-
-EPICS_CA_ADDR_LIST: "10.6.128.255"
+EPICS_CA_ADDR_LIST: "10.5.0.255"
 
 # This variables need to be defined per IOC,
 # Diferent detectors need slightly different set, e.g
@@ -23,30 +17,26 @@ EPICS_CA_ADDR_LIST: "10.6.128.255"
 # 
 #######################################################################################################
 ioc_names: 
-  # - SimDetectorTest1:
-  #   ioc_name: "SimDetectorTest1"
-  #   ENGINEER: "Oksana111 x7028"
-  #   LOCATION: "X1 ID Hutch X"
-  #   IOC_TYPE: ADSimDetector
-  #   PREFIX: "13SIM1_X"
-  #   PORT: 6009
-  # - SimDetectorTest2:
-  #   ioc_name: "SimDetectorTest2"
-  #   ENGINEER: "Oksana222 x7028"
-  #   LOCATION: "X2 ID Hutch X"
-  #   IOC_TYPE: ADSimDetector
-  #   PREFIX: "13SIM1_Z"
-  #   PORT: 6010
+  - SimDetectorTest1:
+    ENGINEER: "Oksana111 x7028"
+    LOCATION: "X1 ID Hutch X"
+    IOC_TYPE: ADSimDetector
+    PREFIX: "13SIM1_X"
+    PORT: 6009
+  - SimDetectorTest2:
+    ENGINEER: "Oksana222 x7028"
+    LOCATION: "X2 ID Hutch X"
+    IOC_TYPE: ADSimDetector
+    PREFIX: "13SIM1_Z"
+    PORT: 6010
   - ProsilicaTest1:
-    ioc_name: "ProsilicaTest1"
     ENGINEER: "Oksana33 x7028"
     LOCATION: "X3 ID Hutch X"
     IOC_TYPE: ADProsilica
     PREFIX: "PREFIX{oops}"
     PORT: 6011
-    DETECTOR_IP: "11.22.33.44"
-  - EigerTest1: 
-    ioc_name: EigerTest1
+    DETECTOR_IP: "10.5.1.40"
+  - EigerTest1:
     ENGINEER: "OksanaI x7028"
     LOCATION: "X3 ID Hutch Test"
     IOC_TYPE: ADEiger
@@ -54,10 +44,9 @@ ioc_names:
     PORT: 6012
     DETECTOR_IP: "10.11.1.3"
   - PtGreyTest1:
-    ioc_name: PtGreyTest1
     ENGINEER: "OksanaI x7028"
     LOCATION: "X3 ID Hutch Test"
     IOC_TYPE: ADPointGrey
-    PREFIX: "XF:11IDB-ES{Cam:BFLY}"
+    PREFIX: "XF:11IDB-ES{Det:Eig1M}"
     PORT: 6013
     CAMERA_ID: "17427898"

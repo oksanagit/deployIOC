@@ -29,13 +29,14 @@
             dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
             owner: softioc
             group: controls
-            mode: u=rwx,g=rwx,o=rx    
+            mode: u=rwx,g=rwx,o=rx 
+      #      force: no   
 
-      - name: enter correct path to ADPointGrey executable
-        replace:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          regexp: '#!../..'
-          replace: "#!{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC"
+      # - name: enter correct path to ADPointGrey executable
+      #   replace:
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+      #     regexp: '#!../..'
+      #     replace: "#!{{ deployment_dir }}/support/areaDetector/ADPointGrey/iocs/pointGreyIOC"
 
       - name: add path to executable
         lineinfile:

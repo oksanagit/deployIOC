@@ -23,7 +23,7 @@
             state: link
         when: generateEnvPaths == "NO"
 
-      - name: create envPaths for binary deployment in a different folder than iot was compiled in
+      - name: create envPaths for binary deployment in a different folder than it was compiled in
         blockinfile:
             dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
             create: yes
@@ -57,7 +57,6 @@
             group: controls
             mode: u=r,g=r,o=r
             state: link
-#        when: IOC_TYPE == 'ADSimDetector' 
 
       - name: copy ADSimDetector st_base.cmd to {{ioc_name}}
         copy:
@@ -67,20 +66,7 @@
             owner: softioc
             group: controls
             mode: u=rwx,g=rwx,o=rx   
-#        when: IOC_TYPE == 'ADSimDetector' 
-
-      - name: enter correct path to ADSimDetector executable
-        replace:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          regexp: '#!../..'
-          replace: "#!{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC"
-#        when: IOC_TYPE == 'ADSimDetector' 
-
-      - name: add < envPaths 
-        lineinfile:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-          insertbefore: BOF
-          line: < envPaths
+            force: no 
 
       - name: add path to executable
         lineinfile:
@@ -88,3 +74,8 @@
           insertbefore: BOF
           line: "#!{{ deployment_dir }}/support/areaDetector/ADSimDetector/iocs/simDetectorIOC/bin/linux-x86_64/simDetectorApp"
 
+      - name: insert < envPaths, needs for SDsimDtector
+        lineinfile: 
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertafter: "^#!/.*$"
+          line: "< envPaths"
