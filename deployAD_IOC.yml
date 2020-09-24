@@ -12,19 +12,19 @@
       - debug: var=IOC_TYPE
       
 
-      - name: make sure /epics/iocs exists
+      - name: make sure ../epics/iocs exists
         file:
             path: "{{root_ioc_dir}}"
             state: directory   
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: '0775'
       - name: create dir ioc_name if it does not exists  
         file:
             path: "{{root_ioc_dir}}/{{ioc_name}}"
             state: directory
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: '0775'
 
      
@@ -55,6 +55,10 @@
       - include_role:
           name: ADPointGrey
         when: IOC_TYPE == 'ADPointGrey'       
+
+      - include_role:
+          name: Xspress3_4Ch
+        when: IOC_TYPE == 'Xspress3_4Ch'         
       
     ###########################################################
     #
@@ -86,16 +90,16 @@
         file:
             path: "{{root_ioc_dir}}/{{ioc_name}}/autosave"
             state: directory
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: '0777'      
       
       - name: create config file if Debian
         blockinfile:
                 path: "{{root_ioc_dir}}/{{ioc_name}}/config"
                 create: yes
-                owner: softioc
-                group: controls
+                owner: "{{ USER }}"
+                group: "{{ GROUP}}"
                 mode: u=rw,g=rw,o=r
                 block: |
                   NAME={{ ioc_name }}
@@ -111,14 +115,23 @@
                   
  
 
-      - name: create procServe script if CentOS; 
+      - name: create procServ script if CentOS; 
         blockinfile:
               path: "{{root_ioc_dir}}/{{ioc_name}}/startEpicsIOC"
               create: yes
-              owner: softioc
-              group: controls
+              owner: "{{ USER }}"
+              group: "{{ GROUP }}"
               mode: u=rwx,g=rwx,o=r
               block: |
                   procServ --logstamp -n "{{ioc_name}}" -i ^D -L {{root_ioc_dir}}/{{ioc_name}}/logs/epics_ioc.log {{PORT}} ./st.cmd
                   telnet localhost {{PORT}}
         when: ansible_os_family == 'RedHat'        
+
+      - name: create "{{root_ioc_dir}}/{{ioc_name}}/logs" folder if CentOS
+        file:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/logs"
+          state: directory   
+          owner: "{{ USER }}"
+          group: "{{ GROUP }}"
+          mode: '0775'
+        when: ansible_os_family == 'RedHat'    

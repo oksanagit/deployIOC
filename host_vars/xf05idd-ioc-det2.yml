@@ -1,0 +1,20 @@
+root_ioc_dir: /home/xspress3/epics/iocs
+# deployment_dir ponts to the root of the deployed binaries
+# example /opt/epicsTest/support/areaDetector/ADProsilica.....
+deployment_dir: /home/xspress3/epics  
+generateEnvPaths: "NO"
+USER: xspress3
+GROUP: xspress3
+
+EPICS_CA_ADDR_LIST: "10.5.0.255"
+
+ioc_names: 
+      - xspress3_3_test
+
+_IOCs:
+  xspress3_3_test: 
+    ENGINEER: "OksanaI x7028"
+    LOCATION: "End Station"
+    IOC_TYPE: Xspress3_4Ch
+    PREFIX: "XF:05IDD-ES{Xsp:3}:"
+    PORT: 20001

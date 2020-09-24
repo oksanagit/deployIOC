@@ -1,37 +1,32 @@
 #
-# This variables are the same per host
-# They will used to customize IOC's deployment. 
-# Deploytment_dir is The root of epics binaries tree 
-# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO") is set by the script
+# This variables will be used to customize IOC's deployment. 
+# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO") is set by the script 
+# for all deployments
 #
 ####################################################################
 
-root_ioc_dir: /epics/iocs
-deployment_dir: /opt/epicsTest
-generateEnvPaths: "NO"
-EPICS_CA_ADDR_LIST: "10.5.0.255"
-USER: softioc
+EPICS_CA_ADDR_LIST: "10.6.128.255"
 
 # This variables need to be defined per IOC,
 # Diferent detectors need slightly different set, e.g
 # some use cameraID (ADPointGrey), some IP (ADProsilica).
 
-# ENGINEER: "TBD"
-# LOCATION: "tbd"
-# PREFIX: "NeedToSet"
-# DETECTOR_IP: "??.??.??.??"
-# CAMERA_ID: "?????????"
-# IOC_TYPE: MustDefine
-# PORT: ?????
+# Script will loop over ioc_names, and deploy each one with macros defined in _IOCs:{name}:
 
-# This is the list of all detector IOCs deployed at th host specified by the filename.yml
-# If you add another IOC, you MUST add a new entry to _IOCs array with all required Ansible variables
+# This is the list of all detector IOCs deployed on the host specified by the hostname.yml
+# - If you add another IOC, you MUST add a new entry to _IOCs array with all required Ansible variables
+# - If you add new IOC to ioc_names and forget to spesify details for this IOC in _IOCs, the script will fail.
+# - If the name in ioc_names is the same as existing IOC, files will be overwrittern. 
 # 
 #######################################################################################################
+# ioc_names is the list of IOCs deployed at this host
 ioc_names: 
       - SimDetectorTest1
       - SimDetectorTest2
       - ProsilicaTest1
+      - PtGreyTest1
+      - EigerTest1
+      - my_Test
 
 
 _IOCs:
@@ -57,21 +52,18 @@ _IOCs:
     PORT: 6011
     DETECTOR_IP: "11.22.33.44"
 
-# SimDetectorTest1: 
-#     IOC_TYPE: ADSimDetector
-#     PREFIX: "13SIM1"
-#     PORT: 6009
+  PtGreyTest1:
+    ENGINEER: "OksanaI x7028"
+    LOCATION: "X3 ID Hutch Test"
+    IOC_TYPE: ADPointGrey
+    PREFIX: "XF:11IDB-ES{Cam:BFLY}"
+    PORT: 6013
+    CAMERA_ID: "17427898"  
 
-##PREFIX: "XF:11IDB-ES{Det:Eig1M}"
-
-# PREFIX: "XF:05ID1-ES{Test-Cam:1}"
-#DETECTOR_IP: "10.11.1.3"
-#DETECTOR_IP: "10.5.1.40"
-# Some cameras like PointGrey, for example, are indentified by ID, rather then by IP
-#CAMERA_ID: "17427898"
-#ioc_name: yourIOCName
-
-
-
-
-##IOC_TYPE: ADEiger
+  EigerTest1: 
+    ENGINEER: "OksanaI x7028"
+    LOCATION: "X3 ID Hutch Test"
+    IOC_TYPE: ADEiger
+    PREFIX: "XF:11IDB-ES{Det:Eig1M}"
+    PORT: 6012
+    DETECTOR_IP: "10.11.1.3"
