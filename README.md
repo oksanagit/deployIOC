@@ -1,4 +1,4 @@
-# What scrip does and supports 
+# What script does and supports 
 This Ansible utility automaticaly deploys/creates instances of IOCs in {root_ioc_dir} folder. To change the deployment folder, one needs to redefine {root_ioc_dir} 
 Corrrect user:group should be defined in group_vars/all.yml
 This settings delploy all areaDetector iocs in  /epics/iocs as softioc:controls user
