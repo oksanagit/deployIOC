@@ -1,0 +1,30 @@
+root_ioc_dir: /epics/iocs
+# deployment_dir ponts to the root of the deployed binaries
+# example /opt/epicsTest/support/areaDetector/ADProsilica.....
+deployment_dir: /ad-nfs/epics/production/R3-9/Debian10  
+generateEnvPaths: "YES"
+USER: softioc
+GROUP: softioc
+
+EPICS_CA_ADDR_LIST: "10.67.177.255"
+
+ioc_names: 
+      - camDiagTest1
+      - camDiagTest2
+
+_IOCs:
+  camDiagTest1: 
+    ENGINEER: "John S x9999"
+    LOCATION: "23ID2 location detatils"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID2-BI{Diag:1-Cam:1}"
+    PORT: 20001
+    DETECTOR_IP: '"xf23id2-cam2.nsls2.bnl.local"'
+
+  camDiagTest2: 
+    ENGINEER: "John S x9999"
+    LOCATION: "23ID2 location detatils"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID2-BI{Diag:1-Cam:2}"
+    PORT: 20002
+    DETECTOR_IP: "xf23id2-cam2.nsls2.bnl.local1"

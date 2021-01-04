@@ -12,3 +12,7 @@ xf05id1-ioc1
 xf11id-dev
 [BMM]
 xf06bm-ioc2
+[POOL]
+10.16.2.70
+[IOS]
+xf23id2-ioc1
