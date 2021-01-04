@@ -60,6 +60,10 @@
           name: Xspress3_4Ch
         when: IOC_TYPE == 'Xspress3_4Ch'         
       
+      - include_role:
+          name: Xspress3_1Ch
+        when: IOC_TYPE == 'Xspress3_1Ch'         
+      
     ###########################################################
     #
     # End of detector specific section
@@ -83,7 +87,7 @@
           # regexp: '[0-9A-Za-z]*:'
           # replace: "{{PREFIX}}"
           # regexp: 'epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
-          regexp: '^epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z]*:\"\)'
+          regexp: '^epicsEnvSet\(\"PREFIX\", \"[0-9A-Za-z_]*:\"\)'
           replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}")'
 
       - name: create atosave folder  
@@ -135,3 +139,12 @@
           group: "{{ GROUP }}"
           mode: '0775'
         when: ansible_os_family == 'RedHat'    
+
+      - name: make sure {{item}} is installed
+        yum:
+          name: "{{ item }}"
+          state: present
+        with_items:
+          - procServ
+          - telnet
+        when: ansible_os_family == 'RedHat'   

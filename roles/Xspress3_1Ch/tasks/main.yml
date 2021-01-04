@@ -1,0 +1,46 @@
+########################################
+# 
+# Xspress3IOC_4Ch role 
+#
+########################################
+
+      - name: create envPaths soft link
+        file:
+            src: "{{ deployment_dir }}/support/xspress3/iocs/xspress3IOC/iocBoot/ioc_1Channel/envPaths"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            owner: xspress3
+            group: xspress3
+            mode: u=r,g=r,o=r
+            state: link
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/xspress3/iocs/xspress3IOC/iocBoot/ioc_1Channel/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+            owner: xspress3
+            group: xspress3
+            mode: u=r,g=r,o=r
+            state: link 
+
+      - name: copy st.cmd to {{ioc_name}}
+        copy:
+            src: "{{ deployment_dir }}/support/xspress3/iocs/xspress3IOC/iocBoot/ioc_1Channel/st.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: xspress3
+            group: xspress3
+            mode: u=rwx,g=rwx,o=rx    
+      - name: add env EPICS_CA_MAX_ARRAY_BYTES
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: 'epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES", "5000")'   # 4064 = 1024*4 is the true count
+
+      - name: add path to executable to st.cmd file in the ioc folder
+        lineinfile: 
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: "#!{{ deployment_dir }}/support/xspress3/iocs/xspress3IOC/bin/linux-x86_64/xspress3App"
+      
+      # st.cmd has << envPaths already
+      

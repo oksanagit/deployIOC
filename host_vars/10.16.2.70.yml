@@ -1,0 +1,20 @@
+root_ioc_dir: /home/xspress3/epics/iocs
+# deployment_dir ponts to the root of the deployed binaries
+# example /opt/epicsTest/support/areaDetector/ADProsilica.....
+deployment_dir: /home/xspress3/epics  
+generateEnvPaths: "NO"
+USER: xspress3
+GROUP: xspress3
+
+EPICS_CA_ADDR_LIST: "10.16.0.255"
+
+ioc_names: 
+      - 16ID1_1Channel
+
+_IOCs:
+  16ID1_1Channel: 
+    ENGINEER: "OksanaI x7028"
+    LOCATION: "Detector Pool loan to 16ID1"
+    IOC_TYPE: Xspress3_1Ch
+    PREFIX: "XF:16IDC-ES{Xsp:1}:"
+    PORT: 20001
