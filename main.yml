@@ -3,6 +3,10 @@
   become: true
   hosts: all
   tasks:
+    - fail:
+        msg: "you must use -l or --limit"
+      when: ansible_limit is not defined
+      run_once: true
     - include_tasks:  deployAD_IOC.yml
       vars:
         ioc_name: "{{ item }}"
