@@ -98,7 +98,7 @@
             group: "{{ GROUP }}"
             mode: '0777'      
       
-      - name: create config file if Debian
+      - name: create config file 
         blockinfile:
                 path: "{{root_ioc_dir}}/{{ioc_name}}/config"
                 create: yes
@@ -110,41 +110,3 @@
                   USER={{USER}}
                   PORT={{PORT}}
                   HOST={{ inventory_hostname}}
-        when: ansible_os_family == 'Debian'             
-
-# create procServe script if CentOS; It is detector spesific
-# How oftern it will be deployed on CentOS? 
-# example: 
-# procServ --logstamp -n "iocPilatus" -i ^D -L /home/det/epics/logs/epics_ioc.log 20001 /home/det/epics/areaDetector/ADPilatus/iocs/pilatusIOC/bin/linux-x86_64/pilatusDetectorApp st.cmd
-                  
- 
-
-      - name: create procServ script if CentOS; 
-        blockinfile:
-              path: "{{root_ioc_dir}}/{{ioc_name}}/startEpicsIOC"
-              create: yes
-              owner: "{{ USER }}"
-              group: "{{ GROUP }}"
-              mode: u=rwx,g=rwx,o=r
-              block: |
-                  procServ --logstamp -n "{{ioc_name}}" -i ^D -L {{root_ioc_dir}}/{{ioc_name}}/logs/epics_ioc.log {{PORT}} ./st.cmd
-                  telnet localhost {{PORT}}
-        when: ansible_os_family == 'RedHat'        
-
-      - name: create "{{root_ioc_dir}}/{{ioc_name}}/logs" folder if CentOS
-        file:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/logs"
-          state: directory   
-          owner: "{{ USER }}"
-          group: "{{ GROUP }}"
-          mode: '0775'
-        when: ansible_os_family == 'RedHat'    
-
-      - name: make sure {{item}} is installed
-        yum:
-          name: "{{ item }}"
-          state: present
-        with_items:
-          - procServ
-          - telnet
-        when: ansible_os_family == 'RedHat'   

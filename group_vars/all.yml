@@ -1,8 +1,8 @@
 root_ioc_dir: /epics/iocs
 # deployment_dir ponts to the root of the deployed binaries
 # example /opt/epicsTest/support/areaDetector/ADProsilica.....
-deployment_dir: /opt/epicsTest  
-generateEnvPaths: "NO"
+deployment_dir: /epics/bundles/EPICS_Prod_Bundle_rhel_8.3_2021-05-10  
+generateEnvPaths: "YES"
 USER: softioc
 GROUP: controls
-#GROUP: xspress3
+ansible_python_interpreter: /usr/bin/python3

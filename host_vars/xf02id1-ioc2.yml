@@ -1,0 +1,139 @@
+#
+# This variables will be used to customize IOC's deployment. 
+# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO") is set by the script 
+# for all deployments
+#
+####################################################################
+
+EPICS_CA_ADDR_LIST: "10.66.11.255"
+
+# This variables need to be defined per IOC,
+# Diferent detectors need slightly different set, e.g
+# some use cameraID (ADPointGrey), some IP (ADProsilica).
+
+# Script will loop over ioc_names, and deploy each one with macros defined in _IOCs:{name}:
+
+# This is the list of all detector IOCs deployed on the host specified by the hostname.yml
+# - If you add another IOC, you MUST add a new entry to _IOCs array with all required Ansible variables
+# - If you add new IOC to ioc_names and forget to spesify details for this IOC in _IOCs, the script will fail.
+# - If the name in ioc_names is the same as existing IOC, files will be overwrittern. 
+# 
+#######################################################################################################
+# ioc_names is the list of IOCs deployed at this host
+ioc_names: 
+      - cam01
+
+
+_IOCs:
+  cam01:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDA"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDA-BI{Diag:1-Cam:H}"
+    PORT: 5001
+    DETECTOR_IP: "xf02id1-cam1.nsls2.bnl.local"
+  cam02:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDA"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDA-BI{Diag:1-Cam:V}"
+    PORT: 5002
+    DETECTOR_IP: "xf02id1-cam2.nsls2.bnl.local"
+  cam03:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDC"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDC-BI{Mir:3-Cam:13_U_1}}"
+    PORT: 5003
+    DETECTOR_IP: "xf02id1-cam3.nsls2.bnl.local" 
+  cam04:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDC"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDC-BI{Slt:1-Cam:15_1}}"
+    PORT: 5004
+    DETECTOR_IP: "xf02id1-cam4.nsls2.bnl.local"   
+  cam05:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDC"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDC-BI{Mir:4-Cam:18_1}"
+    PORT: 5005
+    DETECTOR_IP: "xf02id1-cam5.nsls2.bnl.local"  
+  cam06:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_1}"
+    PORT: 5006
+    DETECTOR_IP: "xf02id1-cam18.nsls2.bnl.local"
+  cam07:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_2}"
+    PORT: 5007
+    DETECTOR_IP: "xf02id1-cam7.nsls2.bnl.local"
+  cam08:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_3}"
+    PORT: 5008
+    DETECTOR_IP: "xf02id1-cam8.nsls2.bnl.local"
+  cam09:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_4}"
+    PORT: 5009
+    DETECTOR_IP: "xf02id1-cam9.nsls2.bnl.local"
+  cam10:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_5}"
+    PORT: 5010
+    DETECTOR_IP: "xf02id1-cam10.nsls2.bnl.local"
+  cam12:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_7}"
+    PORT: 5012
+    DETECTOR_IP: "xf02id1-cam12.nsls2.bnl.local"
+  cam13:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{SC:1-Cam:S1_8}"
+    PORT: 5013
+    DETECTOR_IP: "xf02id1-cam13.nsls2.bnl.local"
+  cam15:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{ST:1-Cam:S3_2}"
+    PORT: 5015
+    DETECTOR_IP: "xf02id1-cam15.nsls2.bnl.local"
+  cam16:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{ST:1-Cam:S3_3}"
+    PORT: 5016
+    DETECTOR_IP: "xf02id1-cam16.nsls2.bnl.local" 
+  cam17:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{ST:1-Cam:S3_4}"
+    PORT: 5017
+    DETECTOR_IP: "xf02id1-cam17.nsls2.bnl.local"
+  cam18:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "02IDD"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:02IDD-BI{ST:1-Cam:S3_5}"
+    PORT: 5018
+    DETECTOR_IP: "xf02id1-cam6.nsls2.bnl.local"               

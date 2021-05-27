@@ -4,35 +4,35 @@
 #
 ########################################
 
-      # This check is added on Jakub Wlodek request. To be evaluated if still needed
+      # Just a sanity check if binary exists
       - name: check if binary exists
         shell: 'ls "{{ deployment_dir }}"/support/areaDetector/ADProsilica/iocs/prosilicaIOC/bin/linux-x86_64/prosilicaApp'
 
-      # Check it envPath exists and is symbolyc link
-      - stat:
-          path: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
-        register: st
+      # # Check if envPath exists and is symbolyc link
+      # - stat:
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+      #   register: st
   
-      - fail:
-          msg: "envPaths exists and is a link"
-        when: generateEnvPaths == "YES" and st.stat.islnk is defined and st.stat.islnk==True
+      # - fail:
+      #     msg: "envPaths exists and is a link"
+      #   when: generateEnvPaths == "YES" and st.stat.islnk is defined and st.stat.islnk==True
 
-      - name: create envPaths soft link
-        file:
-            src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/envPaths"
-            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
-            owner: softioc
-            group: controls
-            mode: u=r,g=r,o=r
-            state: link
-        when: generateEnvPaths == "NO"
+      # - name: create envPaths soft link
+      #   file:
+      #       src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/envPaths"
+      #       dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+      #       owner: softioc
+      #       group: controls
+      #       mode: u=r,g=r,o=r
+      #       state: link
+      #   when: generateEnvPaths == "NO"
 
       - name: create envPaths for binary deployment in a different folder than iot was compiled in
         blockinfile:
             dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
             create: yes
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: u=r,g=r,o=r
             block: |
               epicsEnvSet("IOC","iocProsilica")
@@ -57,8 +57,8 @@
         file:
             src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/auto_settings.req"
             dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: u=r,g=r,o=r
             state: link
 #        when: IOC_TYPE == 'ADProsilica' 
@@ -68,8 +68,8 @@
             src: "{{ deployment_dir }}/support/areaDetector/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/st.cmd"
             remote_src: yes
             dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
-            owner: softioc
-            group: controls
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
             mode: u=rwx,g=rwx,o=rx   
 
 #        when: IOC_TYPE == 'ADProsilica' 

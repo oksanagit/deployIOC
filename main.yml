@@ -1,5 +1,5 @@
 ---
-- name: test for lopping for deploying different IOCs on the target host
+- name: Deploying different IOCs on the target host
   become: true
   hosts: all
   tasks:
