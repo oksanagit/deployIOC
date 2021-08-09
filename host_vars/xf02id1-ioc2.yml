@@ -21,7 +21,7 @@ EPICS_CA_ADDR_LIST: "10.66.11.255"
 #######################################################################################################
 # ioc_names is the list of IOCs deployed at this host
 ioc_names: 
-#      - cam01
+      - cam01
       - cam02
       - cam03
       - cam04
