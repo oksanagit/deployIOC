@@ -1,0 +1,291 @@
+#
+# This variables will be used to customize IOC's deployment. 
+# epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO") is set by the script 
+# for all deployments
+#
+####################################################################
+deployment_dir: /epics/bundles/EPICS_Prod_Bundle_rhel_8.3_2021-07-01 
+USER: oksana
+
+EPICS_CA_ADDR_LIST: "10.66.163.255"
+BROADCAST:          "10.66.162.255"
+#root_ioc_dir: /nsls2/users/oksana/test
+root_ioc_dir: /epics/iocs
+
+become: true
+#become_user: softioc
+
+# This variables need to be defined per IOC,
+# Diferent detectors need slightly different set, e.g
+# some use cameraID (ADPointGrey), some IP (ADProsilica).
+
+# Script will loop over ioc_names, and deploy each one with macros defined in _IOCs:{name}:
+
+# This is the list of all detector IOCs deployed on the host specified by the hostname.yml
+# - If you add another IOC, you MUST add a new entry to _IOCs array with all required Ansible variables
+# - If you add new IOC to ioc_names and forget to spesify details for this IOC in _IOCs, the script will fail.
+# - If the name in ioc_names is the same as existing IOC, files will be overwrittern. 
+# 
+#######################################################################################################
+# ioc_names is the list of IOCs deployed at this host
+ioc_names: 
+      # - quadEM-1
+      # - quadEM-2
+      # - quadEM-3
+      # - quadEM-4
+      # - quadEM-5
+      # - quadEM-6
+      # - quadEM-7
+      # - quadEM-8
+      # - quadEM-9
+      # - quadEM-10
+      # - quadEM-11
+      # - quadEM-12
+      # - quadEM-13
+      # - quadEM-15
+      # - quadEM-16
+      - cam01
+      # - cam02
+      # - cam03
+      # - cam04
+      # - cam05
+      # - cam06
+      # - cam07
+      # - cam08
+      # - cam09
+      # - cam10
+      # - cam11
+      # - cam14
+      # - cam15
+      # - cam16
+      # - cam17
+      # - cam18
+      # - cam19
+      
+
+_IOCs:
+  quadEM-1:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:1}"
+    PORT: 5051
+    CAMERA_ID: "1"
+  quadEM-2:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:2}"
+    PORT: 5052
+    CAMERA_ID: "2"
+  quadEM-3:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:3}"
+    PORT: 5053
+    CAMERA_ID: "3"
+  quadEM-4:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:4}"
+    PORT: 5054
+    CAMERA_ID: "4"
+  quadEM-5:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:5}"
+    PORT: 5055
+    CAMERA_ID: "5"
+  quadEM-6:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:6}"
+    PORT: 5056
+    CAMERA_ID: "6"
+  quadEM-7:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:7}"
+    PORT: 5057
+    CAMERA_ID: "7"    
+  quadEM-8:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:8}"
+    PORT: 5058
+    CAMERA_ID: "8"
+  quadEM-9:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:9}"
+    PORT: 5059
+    CAMERA_ID: "9"
+  quadEM-10:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:10}"
+    PORT: 5060
+    CAMERA_ID: "10"
+  quadEM-11:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:11}"
+    PORT: 5061
+    CAMERA_ID: "11"
+  quadEM-12:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:12}"
+    PORT: 5062
+    CAMERA_ID: "12"   
+  quadEM-13:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:13}"
+    PORT: 5063
+    CAMERA_ID: "13"
+  quadEM-15:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:15}"
+    PORT: 5075
+    CAMERA_ID: "15"
+  quadEM-16:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1"
+    IOC_TYPE: NSLS_EM
+    PREFIX: "XF:21IDA-BI{EM:16}"
+    PORT: 5066
+    CAMERA_ID: "16"                     
+  cam01:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1A"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDA-BI{Diag:1-Cam:H}"
+    PORT: 7001
+    DETECTOR_IP: "xf21id1-cam1.nsls2.bnl.local"
+  cam02:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1A"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDA-BI{Diag:1-Cam:V}"
+    PORT: 7002
+    DETECTOR_IP: "xf21id1-cam2.nsls2.bnl.local"  
+  cam03:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Lock2:3A-Cam:EA3_1}"
+    PORT: 7003
+    DETECTOR_IP: "xf21id1-cam3.nsls2.bnl.local"  
+  cam04:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Lock1:4A-Cam:EA4_1}"
+    PORT: 7004
+    DETECTOR_IP: "xf21id1-cam4.nsls2.bnl.local" 
+  cam05:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Prep:2A-Cam:EA2_1}"
+    PORT: 7005
+    DETECTOR_IP: "xf21id1-cam5.nsls2.bnl.local" 
+  cam06:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1A"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDB-BI{Mir:3-Cam:10_U_1}"
+    PORT: 7006
+    DETECTOR_IP: "xf21id1-cam6.nsls2.bnl.local" 
+  cam07:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Anal:1A-Cam:lens}"
+    PORT: 7007
+    DETECTOR_IP: "xf21id1-cam7.nsls2.bnl.local" 
+  cam08:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Anal:1A-Cam:beam}"
+    PORT: 7008
+    DETECTOR_IP: "xf21id1-cam8.nsls2.bnl.local" 
+  cam09:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Prep:2A-Cam:LEED}"
+    PORT: 7009
+    DETECTOR_IP: "xf21id1-cam9.nsls2.bnl.local" 
+  cam10:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Prep:2A-Cam:evap1}"
+    PORT: 7010
+    DETECTOR_IP: "xf21id1-cam10.nsls2.bnl.local" 
+  cam11:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-BI{Prep:2A-Cam:evap2}"
+    PORT: 7011
+    DETECTOR_IP: "xf21id1-cam11.nsls2.bnl.local"   
+  cam14:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{LOWT:5A-Cam:1}"
+    PORT: 7014
+    DETECTOR_IP: "xf21id1-cam14.nsls2.bnl.local"   
+  cam15:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{LOWT:5A-Cam:2}"
+    PORT: 7015
+    DETECTOR_IP: "xf21id1-cam15.nsls2.bnl.local"   
+  cam16:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{BT:A2-Cam:1}"
+    PORT: 7016
+    DETECTOR_IP: "xf21id1-cam16.nsls2.bnl.local"   
+  cam17:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{BT:B2-Cam:1}"
+    PORT: 7017
+    DETECTOR_IP: "xf21id1-cam17.nsls2.bnl.local"   
+  cam18:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{PEEM:1B-Cam:1}"
+    PORT: 7018
+    DETECTOR_IP: "xf21id1-cam18.nsls2.bnl.local"   
+  cam19:
+    ENGINEER: "Oksana x7028"
+    LOCATION: "21ID1D"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:21IDD-OP{BT:B5-Cam:1}"
+    PORT: 7019
+    DETECTOR_IP: "xf21id1-cam19.nsls2.bnl.local"   
+                  

@@ -1,0 +1,102 @@
+#root_ioc_dir: /nsls2/users/oksana/iocs
+# # deployment_dir ponts to the root of the deployed binaries
+# # example /opt/epicsTest/support/areaDetector/ADProsilica.....
+# deployment_dir: /ad-nfs/epics/production/R3-9/Debian10  
+# generateEnvPaths: "YES"
+# USER: softioc
+# GROUP: softioc
+
+EPICS_CA_ADDR_LIST: "10.67.177.255"
+
+ioc_names: 
+      - cam-diag1
+      - cam-diag2
+      - cam-diag3
+      - cam-diag5
+      - cam-diag6
+      - cam-dif1
+      - cam-dif2
+      - cam-dif3
+      - cam-dif-beam
+      - cam-slit1
+
+_IOCs:
+  cam-diag1: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Diag:1-Cam:1}"
+    PORT: 4202
+    DETECTOR_IP: '"xf23id1-cam10.nsls2.bnl.local"'
+
+  cam-diag2: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Diag:2-Cam:1}"
+    PORT: 4203
+    DETECTOR_IP: '"10.66.177.63"'
+
+  cam-diag3: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Diag:3-Cam:1}"
+    PORT: 4501
+    DETECTOR_IP: '"xf23id1-cam3.nsls2.bnl.local"'
+
+  cam-diag5: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Diag:5-Cam:1}"
+    PORT: 4503
+    DETECTOR_IP: '"xf23id1-cam9.nsls2.bnl.local"'
+
+  cam-diag6: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Diag:6-Cam:1}"
+    PORT: 4300
+    DETECTOR_IP: '"xf23id1-cam1.nsls2.bnl.local"'      
+
+  cam-dif1: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Dif-Cam:1}"
+    PORT: 4204
+    DETECTOR_IP: '"xf23id1-cam6.nsls2.bnl.local"'
+  
+  cam-dif2: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Dif-Cam:2}"
+    PORT: 4205
+    DETECTOR_IP: '"xf23id1-cam5.nsls2.bnl.local"'
+  
+  cam-dif3: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Dif-Cam:3}"
+    PORT: 4206
+    DETECTOR_IP: '"xf23id1-cam2.nsls2.bnl.local"'
+  
+  cam-dif-beam: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Dif-Cam:Beam}"
+    PORT: 4201
+    DETECTOR_IP: '"xf23id1-cam4.nsls2.bnl.local"'
+  
+  cam-slit1: 
+    ENGINEER: "Oksana Ivashkevych"
+    LOCATION: "23ID1"
+    IOC_TYPE: ADProsilica
+    PREFIX: "XF:23ID1-ES{Slt:1-Cam:1}"
+    PORT: 4504
+    DETECTOR_IP: '"xf23id1-cam7.nsls2.bnl.local"'

@@ -1,0 +1,115 @@
+########################################
+# 
+# quadEM NSLS_EM ioc
+#
+########################################
+
+      # Just a sanity check if binary exists
+      - name: check if binary exists
+        shell: 'ls "{{ deployment_dir }}"/support/quadEM/bin/linux-x86_64/quadEMTestApp'
+
+      # # Check if envPath exists and is symbolyc link
+      # - stat:
+      #     path: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+      #   register: st
+  
+      # - fail:
+      #     msg: "envPaths exists and is a link"
+      #   when: generateEnvPaths == "YES" and st.stat.islnk is defined and st.stat.islnk==True
+
+      # - name: create envPaths soft link
+      #   file:
+      #       src: "{{ deployment_dir }}/support/quadEM/ADProsilica/iocs/prosilicaIOC/iocBoot/iocProsilica/envPaths"
+      #       dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+      #       owner: softioc
+      #       group: controls
+      #       mode: u=r,g=r,o=r
+      #       state: link
+      #   when: generateEnvPaths == "NO"
+
+      - name: create envPaths for binary deployment in a different folder than ioc was compiled in
+        blockinfile:
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/envPaths"
+            create: yes
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
+            mode: u=r,g=r,o=r
+            block: |
+              epicsEnvSet("IOC","iocNSLS_EM")
+              epicsEnvSet("TOP","{{ deployment_dir }}/support/quadEM")
+              epicsEnvSet("SUPPORT","{{ deployment_dir }}/support")
+              epicsEnvSet("QUADEM","{{ deployment_dir }}/support/quadEM")
+              epicsEnvSet("IPAC","{{ deployment_dir }}/support/ipac")
+              epicsEnvSet("ASYN","{{ deployment_dir }}/support/asyn")
+              epicsEnvSet("AREA_DETECTOR","{{ deployment_dir }}/support/areaDetector")
+              epicsEnvSet("ADSUPPORT","{{ deployment_dir }}/support/areaDetector/ADSupport")
+              epicsEnvSet("ADCORE","{{ deployment_dir }}/support/areaDetector/ADCore")
+              epicsEnvSet("AUTOSAVE","{{ deployment_dir }}/support/autosave")
+              epicsEnvSet("BUSY","{{ deployment_dir }}/support/busy")
+              epicsEnvSet("CALC","{{ deployment_dir }}/support/calc")
+              epicsEnvSet("SNCSEQ","{{ deployment_dir }}/support/seq")
+              epicsEnvSet("SSCAN","{{ deployment_dir }}/support/sscan")
+              epicsEnvSet("DEVIOCSTATS","{{ deployment_dir }}/support/iocStats")
+              epicsEnvSet("EPICS_BASE","{{ deployment_dir }}/epics-base")
+        when: generateEnvPaths == "YES"      
+
+
+      - name: create auto_settings.req soft link
+        file:
+            src: "{{ deployment_dir }}/support/quadEM/iocBoot/iocNSLS_EM/auto_settings.req"
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/auto_settings.req"
+##            owner: "{{ USER }}"
+##            group: "{{ GROUP }}"
+##            mode: u=r,g=r,o=r
+            state: link 
+
+      - name: copy iocNSLS_EM/st.cmd to {{ioc_name}}
+        copy:
+            src: "{{ deployment_dir }}/support/quadEM/iocBoot/iocNSLS_EM/NSLS_EM.cmd"
+            remote_src: yes
+            dest: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+            owner: "{{ USER }}"
+            group: "{{ GROUP }}"
+            mode: u=rwx,g=rwx,o=rx    
+
+      - name: add path to executable
+        lineinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertbefore: BOF
+          line: "#!{{ deployment_dir }}/support/quadEM/bin/linux-x86_64/quadEMTestApp"
+
+      - name: add < envPaths 
+        blockinfile:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          insertafter: "#!{{ deployment_dir }}"
+          block: |
+            errlogInit(5000)
+            < envPaths
+            dbLoadDatabase("$(QUADEM)/dbd/quadEMTestApp.dbd")
+            quadEMTestApp_registerRecordDeviceDriver(pdbbase)
+            epicsEnvSet("EPICS_DB_INCLUDE_PATH", "$(ADCORE)/db:$(QUADEM)/db")
+          marker: "# ENV_PATH"  
+
+      - name: Change BROADCAST address to 10.66.10.255
+        replace: 
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd" 
+          regexp: 'epicsEnvSet\(\"BROADCAST\", \"164.54.160.255\"\)'
+          replace: 'epicsEnvSet("BROADCAST", "{{ BROADCAST }}")'
+
+      - name: Change MODULE_ID from 0 to {module_id} CAMERA_ID is used to hold the {module_id}
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: 'epicsEnvSet\(\"MODULE_ID\", \"0\"\)'
+          replace: 'epicsEnvSet("MODULE_ID", "{{ CAMERA_ID }}")'
+
+      - name: Change RECORD to   EM180
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: 'epicsEnvSet\(\"RECORD\",    \"NSLS_EM:\"\)'
+          replace: 'epicsEnvSet("RECORD",    "EM180:")'
+
+      - name: Change PREFIX to   {PREFIX}
+        replace:
+          path: "{{root_ioc_dir}}/{{ioc_name}}/st.cmd"
+          regexp: 'epicsEnvSet\(\"PREFIX\",    \"quadEMTest:\"\)'
+          replace: 'epicsEnvSet("PREFIX", "{{PREFIX}}")'

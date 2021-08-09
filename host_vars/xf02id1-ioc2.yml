@@ -21,17 +21,31 @@ EPICS_CA_ADDR_LIST: "10.66.11.255"
 #######################################################################################################
 # ioc_names is the list of IOCs deployed at this host
 ioc_names: 
-      - cam01
+#      - cam01
+      - cam02
+      - cam03
+      - cam04
+      - cam05
+      - cam06
+      - cam07
+      - cam08
+      - cam09
+      - cam12
+      - cam13
+      - cam15
+      - cam16
+      - cam17
+      - cam18
 
 
 _IOCs:
-  cam01:
-    ENGINEER: "Oksana x7028"
-    LOCATION: "02IDA"
-    IOC_TYPE: ADProsilica
-    PREFIX: "XF:02IDA-BI{Diag:1-Cam:H}"
-    PORT: 5001
-    DETECTOR_IP: "xf02id1-cam1.nsls2.bnl.local"
+        #  cam01:
+        #    ENGINEER: "Oksana x7028"
+        #    LOCATION: "02IDA"
+        #    IOC_TYPE: ADProsilica
+        #    PREFIX: "XF:02IDA-BI{Diag:1-Cam:H}"
+        #    PORT: 5001
+        #    DETECTOR_IP: "xf02id1-cam1.nsls2.bnl.local"
   cam02:
     ENGINEER: "Oksana x7028"
     LOCATION: "02IDA"

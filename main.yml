@@ -1,6 +1,6 @@
 ---
 - name: Deploying different IOCs on the target host
-  become: true
+  #  become: true
   hosts: all
   tasks:
     - fail:

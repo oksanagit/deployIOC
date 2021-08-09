@@ -12,13 +12,13 @@
       - debug: var=IOC_TYPE
       
 
-      - name: make sure ../epics/iocs exists
-        file:
-            path: "{{root_ioc_dir}}"
-            state: directory   
-            owner: "{{ USER }}"
-            group: "{{ GROUP }}"
-            mode: '0775'
+        #      - name: make sure ../epics/iocs exists
+        #        file:
+        #            path: "{{root_ioc_dir}}"
+        #            state: directory   
+        #            owner: "{{ USER }}"
+        #            group: "{{ GROUP }}"
+        #            mode: '0775'
       - name: create dir ioc_name if it does not exists  
         file:
             path: "{{root_ioc_dir}}/{{ioc_name}}"
@@ -62,7 +62,10 @@
       
       - include_role:
           name: Xspress3_1Ch
-        when: IOC_TYPE == 'Xspress3_1Ch'         
+        when: IOC_TYPE == 'Xspress3_1Ch'  
+      - include_role:
+            name: NSLS_EM
+        when: IOC_TYPE == 'NSLS_EM'
       
     ###########################################################
     #
@@ -79,6 +82,7 @@
               epicsEnvSet("LOCATION", "{{ LOCATION }}")
               epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
               epicsEnvSet("EPICS_CA_ADDR_LIST", "{{ EPICS_CA_ADDR_LIST }}")
+              < /epics/common/{{inventory_hostname}}-netsetup.cmd
               
       - name: set correct PREFIX
         replace:
@@ -107,6 +111,6 @@
                 mode: u=rw,g=rw,o=r
                 block: |
                   NAME={{ ioc_name }}
-                  USER={{USER}}
+                  USER=softioc
                   PORT={{PORT}}
                   HOST={{ inventory_hostname}}
